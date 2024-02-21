@@ -1,6 +1,7 @@
 ---
 - name: Print variables
   hosts: quay_vm
+  gather_facts: false
   tasks:
 
     - name: Debug stage
