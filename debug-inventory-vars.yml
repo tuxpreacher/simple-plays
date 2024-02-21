@@ -1,0 +1,25 @@
+---
+- name: Print variables
+  hosts: quay_vm
+  tasks:
+
+    - name: Debug stage
+      ansible.builtin.debug:
+        var: stage
+
+    - name: Debug quay_all
+      ansible.builtin.debug:
+        var: quay_all
+
+    - name: Debug quay_stage
+      ansible.builtin.debug:
+        var: quay_stage
+
+    - name: Debug test
+      ansible.builtin.debug:
+        var: test
+
+    - name: Debug fqdn
+      ansible.builtin.debug:
+        var: fqdn
+...
