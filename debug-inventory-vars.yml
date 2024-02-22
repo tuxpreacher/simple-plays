@@ -1,6 +1,6 @@
 ---
 - name: Print variables
-  hosts: quay_vm
+  hosts: all
   gather_facts: false
   tasks:
 
