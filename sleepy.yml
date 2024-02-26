@@ -9,3 +9,7 @@
     - name: Sleep a number of seconds
       ansible.builtin.pause:
         seconds: "{{ timer | default(10) | int }}"
+
+    - name: All done
+      ansible.builtin.debug:
+        msg: "Finally done waiting!"
