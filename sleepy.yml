@@ -1,7 +1,7 @@
 ---
 - name: Have a little nap time
   hosts: all
-  gather_facts: false
+  gather_facts: true
   become: false
 
   tasks:
