@@ -3,6 +3,7 @@
   hosts: all
   gather_facts: false
   become: false
+  strategy: free
 
   vars:
     var1: "local"
