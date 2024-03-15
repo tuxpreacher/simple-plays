@@ -16,3 +16,18 @@
       loop:
         - "{{ var1 }}"
         - "{{ var2 }}"
+
+    - name: Print variables
+      ansible.builtin.debug:
+        var: item
+      loop:
+        - "{{ var1 }}"
+        - "{{ var2 }}"
+    
+    - name: Print variables
+      ansible.builtin.debug:
+        var: item
+      loop:
+        - "{{ var1 }}"
+        - "{{ var2 }}"
+
