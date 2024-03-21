@@ -3,7 +3,6 @@
   hosts: all
   gather_facts: false
   tasks:
-
     - name: Debug stage
       ansible.builtin.debug:
         var: stage
@@ -23,4 +22,3 @@
     - name: Debug fqdn
       ansible.builtin.debug:
         var: fqdn
-...
