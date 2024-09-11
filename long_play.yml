@@ -1,0 +1,11 @@
+---
+- name: Long-running play
+  hosts: all
+  gather_facts: false
+  become: false
+
+  tasks:
+
+    - name: Gather facts for a long long time
+      ansible.builtin.setup:
+      loop: "{{ range(0, 50, 1) | list }}"
