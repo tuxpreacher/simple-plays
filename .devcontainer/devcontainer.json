@@ -1,0 +1,14 @@
+{
+	"image": "mcr.microsoft.com/devcontainers/universal:2",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"nopjmp.fairyfloss",
+				"redhat.ansible"
+			],
+            "settings": {
+                "workbench.colorTheme": "fairyfloss"
+            }
+		}
+	}
+}
