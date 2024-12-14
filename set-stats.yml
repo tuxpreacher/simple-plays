@@ -5,8 +5,7 @@
   become: false
 
   tasks:
-
     - name: Set a stat to carry through the workflow
       ansible.builtin.set_stats:
         data:
-          var2: "stat"
+          var2: stat

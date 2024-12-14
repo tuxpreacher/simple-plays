@@ -6,8 +6,8 @@
   strategy: free
 
   vars:
-    var1: "local"
-    var2: "local"
+    var1: local
+    var2: local
 
   tasks:
     - name: Print variables
@@ -23,11 +23,10 @@
       loop:
         - "{{ var1 }}"
         - "{{ var2 }}"
-    
+
     - name: Print variables
       ansible.builtin.debug:
         var: item
       loop:
         - "{{ var1 }}"
         - "{{ var2 }}"
-
