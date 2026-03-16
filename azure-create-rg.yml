@@ -125,8 +125,8 @@
         managed_disk_type: Standard_LRS
         admin_username: azureuser
         ssh_password_enabled: false
-        #ssh_public_keys:
-        #  - path: /home/azureuser/.ssh/authorized_keys
-        #    key_data: "{{ lookup('file', '~/.ssh/id_ed25519_ansible.pub') }}"
+        ssh_public_keys:
+          - path: /home/azureuser/.ssh/authorized_keys
+            key_data: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICblhuyXns6590N9X8FrV0rCj9hiDc6SPXhCrKC+SCHw ansible-2022-01-29"
         network_interfaces: "nic-{{ item }}"
       loop: [1, 2]
