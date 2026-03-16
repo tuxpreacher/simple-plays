@@ -1,0 +1,24 @@
+---
+- name: Provision Azure Infrastructure
+  hosts: localhost
+
+#  vars_files:
+#    - vars/azure_connection.yml
+
+  vars:
+    res_group: "AnsibleDemoRG1"
+    location: "westeurope"
+    kv_name: "ansible-demo-vault-123" # Must be globally unique
+    vm_name: "rhel-web"
+
+  tasks:
+#    - name: Show debug
+#      ansible.builtin.debug:
+#        var: tenant
+
+    - name: Create Resource Group
+      azure.azcollection.azure_rm_resourcegroup:
+#        auth_source: credential_file
+        name: "{{ res_group }}"
+#        location: "{{ location }}"
+#        auth_source: env
