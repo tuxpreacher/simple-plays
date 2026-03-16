@@ -7,7 +7,7 @@
 
   vars:
     res_group: "AnsibleDemoRG1"
-    location: "westeurope"
+    location: "eastus"
     kv_name: "ansible-demo-vault-123" # Must be globally unique
     vm_name: "rhel-web"
 
@@ -20,5 +20,5 @@
       azure.azcollection.azure_rm_resourcegroup:
 #        auth_source: credential_file
         name: "{{ res_group }}"
-#        location: "{{ location }}"
+        location: "{{ location }}"
 #        auth_source: env
