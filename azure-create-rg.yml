@@ -110,7 +110,7 @@
 
     - name: Get Agreements for given Image parameters
       azure_rm_resource:
-        url: "https://management.azure.com/subscriptions/{{ subscriptionId }}/providers/Microsoft.MarketplaceOrdering/offerTypes/virtualmachine/publishers/{{ publisher }}/offers/{{ offer }}/plans/{{ sku }}/agreements/current?api-version=2015-06-01"
+        url: "https://management.azure.com/subscriptions/{{ subscription }}/providers/Microsoft.MarketplaceOrdering/offerTypes/virtualmachine/publishers/{{ publisher }}/offers/{{ offer }}/plans/{{ sku }}/agreements/current?api-version=2015-06-01"
         method: GET
         api_version: "2015-06-01"
       register: agreement_result
