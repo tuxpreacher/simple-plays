@@ -12,13 +12,121 @@
     vm_name: "rhel-web"
 
   tasks:
-#    - name: Show debug
-#      ansible.builtin.debug:
-#        var: tenant
-
     - name: Create Resource Group
       azure.azcollection.azure_rm_resourcegroup:
-#        auth_source: credential_file
         name: "{{ res_group }}"
         location: "{{ location }}"
-#        auth_source: env
+
+    - name: Create Virtual Network
+      azure.azcollection.azure_rm_virtualnetwork:
+        resource_group: "{{ res_group }}"
+        name: "demo-vnet"
+        address_prefixes: "10.0.0.0/16"
+
+    - name: Create Subnet
+      azure.azcollection.azure_rm_subnet:
+        resource_group: "{{ res_group }}"
+        name: "demo-subnet"
+        address_prefix: "10.0.1.0/24"
+        virtual_network_name: "demo-vnet"
+
+    - name: Create Network Security Group
+      azure.azcollection.azure_rm_securitygroup:
+        resource_group: "{{ res_group }}"
+        name: "demo-nsg"
+        rules:
+          - name: 'AllowSSH'
+            protocol: Tcp
+            destination_port_range: 22
+            source_address_prefix: '*'
+            access: Allow
+            priority: 101
+            direction: Inbound
+          - name: 'AllowHTTP'
+            protocol: Tcp
+            destination_port_range: 80
+            source_address_prefix: '*'
+            access: Allow
+            priority: 102
+            direction: Inbound
+
+    - name: Create Public IP for Load Balancer
+      azure.azcollection.azure_rm_publicipaddress:
+        resource_group: "{{ res_group }}"
+        allocation_method: Static
+        name: "lb-pip"
+        sku: Standard
+
+    - name: Create Individual Public IPs for VM Management
+      azure.azcollection.azure_rm_publicipaddress:
+        resource_group: "{{ res_group }}"
+        name: "vm-pip-{{ item }}"
+        allocation_method: Static
+        sku: Standard
+      loop: [1, 2]
+
+    - name: Create Load Balancer (HA)
+      azure.azcollection.azure_rm_loadbalancer:
+        resource_group: "{{ res_group }}"
+        name: "web-lb"
+        sku: Standard
+        frontend_ip_configurations:
+          - name: "frontend-config"
+            public_ip_address: "lb-pip"
+        backend_address_pools:
+          - name: "web-backend-pool"
+        probes:
+          - name: "http-probe"
+            port: 80
+            protocol: Http
+            request_path: "/"
+        load_balancing_rules:
+          - name: "http-rule"
+            frontend_ip_configuration: "frontend-config"
+            backend_address_pool: "web-backend-pool"
+            probe: "http-probe"
+            protocol: Tcp
+            frontend_port: 80
+            backend_port: 80
+            load_distribution: Default
+            idle_timeout: 4
+
+    - name: Create Network Interfaces for the VMs
+      azure.azcollection.azure_rm_networkinterface:
+        resource_group: "{{ res_group }}"
+        name: "nic-{{ item }}"
+        location: "{{ location }}"
+        security_group: "demo-nsg"
+        subnet_name: "demo-subnet"
+        virtual_network_name: "demo-vnet"
+        ip_configurations:
+          - name: "ipconfig{{ item }}"
+            primary: yes
+            public_ip_address_name: "vm-pip-{{ item }}"
+            load_balancer_backend_address_pools:
+              - name: "web-backend-pool"
+                load_balancer: "web-lb"
+      loop: [1, 2]
+
+    - name: Create 2 CentOS 9 Stream in Availability Set
+      azure.azcollection.azure_rm_virtualmachine:
+        resource_group: "{{ res_group }}"
+        name: "{{ vm_name }}-{{ item }}"
+        vm_size: Standard_B2s
+        plan:
+          publisher: procomputers
+          product: centos-9-stream-gen2
+          name: centos-9-stream-gen2
+        image:
+          publisher: procomputers
+          offer: centos-9-stream-gen2
+          sku: centos-9-stream-gen2
+          version: latest
+        managed_disk_type: Standard_LRS
+        admin_username: azureuser
+        ssh_password_enabled: false
+        #ssh_public_keys:
+        #  - path: /home/azureuser/.ssh/authorized_keys
+        #    key_data: "{{ lookup('file', '~/.ssh/id_ed25519_ansible.pub') }}"
+        network_interfaces: "nic-{{ item }}"
+      loop: [1, 2]
