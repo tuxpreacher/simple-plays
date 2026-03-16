@@ -108,6 +108,9 @@
                 load_balancer: "web-lb"
       loop: [1, 2]
 
+    - name: Accept the legal terms
+      ansible.builtin.shell: az vm image terms accept --publisher procomputers --offer centos-9-stream-gen2 --plan centos-9-stream-gen2
+
     - name: Create 2 CentOS 9 Stream in Availability Set
       azure.azcollection.azure_rm_virtualmachine:
         resource_group: "{{ res_group }}"
