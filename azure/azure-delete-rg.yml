@@ -1,5 +1,5 @@
 ---
-- name: Create Azure resource group
+- name: Delete Azure resource group
   hosts: localhost
   gather_facts: false
   vars:
