@@ -1,7 +1,7 @@
 ---
 - name: Provision Azure VMs
   hosts: localhost
-
+  gather_facts: false
   vars:
     res_group: "RGDefaultDemo"
     location: "eastus"
