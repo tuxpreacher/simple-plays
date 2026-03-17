@@ -13,4 +13,4 @@
       azure.azcollection.azure_rm_resourcegroup:
         name: "{{ res_group }}"
         state: absent
-        force: yes
+        force_delete_nonempty: true
