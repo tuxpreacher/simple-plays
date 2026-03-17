@@ -48,3 +48,29 @@
         allocation_method: Static
         name: "lb-pip"
         sku: Standard
+
+    - name: Create Load Balancer (HA)
+      azure.azcollection.azure_rm_loadbalancer:
+        resource_group: "{{ res_group }}"
+        name: "web-lb"
+        sku: Standard
+        frontend_ip_configurations:
+          - name: "frontend-config"
+            public_ip_address: "lb-pip"
+        backend_address_pools:
+          - name: "web-backend-pool"
+        probes:
+          - name: "http-probe"
+            port: 80
+            protocol: Http
+            request_path: "/"
+        load_balancing_rules:
+          - name: "http-rule"
+            frontend_ip_configuration: "frontend-config"
+            backend_address_pool: "web-backend-pool"
+            probe: "http-probe"
+            protocol: Tcp
+            frontend_port: 80
+            backend_port: 80
+            load_distribution: Default
+            idle_timeout: 4
