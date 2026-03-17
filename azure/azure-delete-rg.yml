@@ -1,0 +1,16 @@
+---
+- name: Create Azure resource group
+  hosts: localhost
+  gather_facts: false
+  vars:
+    res_group: "RGDefaultDemo"
+    location: "eastus"
+    vm_name: "rhel-web"
+
+  tasks:
+
+    - name: Delete Resource Group
+      azure.azcollection.azure_rm_resourcegroup:
+        name: "{{ res_group }}"
+        state: absent
+        force: yes
