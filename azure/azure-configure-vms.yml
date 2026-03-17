@@ -1,0 +1,45 @@
+---
+- name: Provision Azure VMs
+  hosts: "{{ res_group }}"
+  become: true
+  vars:
+    res_group: "RGDefaultDemo"
+    location: "eastus"
+    vm_name: "rhel-web"
+
+  tasks:
+
+    - name: Install Apache and PHP
+      ansible.builtin.dnf:
+        name:
+          - httpd
+          - php
+        state: present
+
+    - name: Start and enable httpd service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Remove the old index.html (if it exists)
+      ansible.builtin.file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Create index.php with the VM Hostname
+      ansible.builtin.copy:
+        dest: /var/www/html/index.php
+        content: |
+          <?php
+          echo "<h1>Hello from Azure VM: " . gethostname() . "</h1>";
+          ?>
+        mode: '0644'
+
+    - name: Ensure firewalld allows HTTP
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+      ignore_errors: true
