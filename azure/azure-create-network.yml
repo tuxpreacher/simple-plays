@@ -49,6 +49,14 @@
         name: "lb-pip"
         sku: Standard
 
+    - name: Create Individual Public IPs for VM Management
+      azure.azcollection.azure_rm_publicipaddress:
+        resource_group: "{{ res_group }}"
+        name: "vm-pip-{{ item }}"
+        allocation_method: Static
+        sku: Standard
+      loop: [1, 2]
+
     - name: Create Load Balancer (HA)
       azure.azcollection.azure_rm_loadbalancer:
         resource_group: "{{ res_group }}"
