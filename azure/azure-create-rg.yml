@@ -2,10 +2,9 @@
 - name: Create Azure resource group
   hosts: localhost
   gather_facts: false
+
   vars:
-    res_group: "RGDefaultDemo"
     location: "eastus"
-    vm_name: "rhel-web"
 
   tasks:
 
@@ -13,3 +12,4 @@
       azure.azcollection.azure_rm_resourcegroup:
         name: "{{ res_group }}"
         location: "{{ location }}"
+        state: present

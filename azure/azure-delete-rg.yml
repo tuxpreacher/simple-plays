@@ -2,10 +2,9 @@
 - name: Delete Azure resource group
   hosts: localhost
   gather_facts: false
+
   vars:
-    res_group: "RGDefaultDemo"
     location: "eastus"
-    vm_name: "rhel-web"
 
   tasks:
 

@@ -2,10 +2,9 @@
 - name: Provision Azure networking
   hosts: localhost
   gather_facts: false
+
   vars:
-    res_group: "RGDefaultDemo"
     location: "eastus"
-    vm_name: "rhel-web"
 
   tasks:
 
@@ -14,6 +13,7 @@
         resource_group: "{{ res_group }}"
         name: "demo-vnet"
         address_prefixes: "10.0.0.0/16"
+        state: present
 
     - name: Create Subnet
       azure.azcollection.azure_rm_subnet:
@@ -21,11 +21,13 @@
         name: "demo-subnet"
         address_prefix: "10.0.1.0/24"
         virtual_network_name: "demo-vnet"
+        state: present
 
     - name: Create Network Security Group
       azure.azcollection.azure_rm_securitygroup:
         resource_group: "{{ res_group }}"
         name: "demo-nsg"
+        state: present
         rules:
           - name: 'AllowSSH'
             protocol: Tcp
@@ -48,6 +50,7 @@
         allocation_method: Static
         name: "lb-pip"
         sku: Standard
+        state: present
 
     - name: Create Individual Public IPs for VM Management
       azure.azcollection.azure_rm_publicipaddress:
@@ -55,6 +58,7 @@
         name: "vm-pip-{{ item }}"
         allocation_method: Static
         sku: Standard
+        state: present
       loop: [1, 2]
 
     - name: Create Load Balancer (HA)
@@ -82,3 +86,4 @@
             backend_port: 80
             load_distribution: Default
             idle_timeout: 4
+        state: present
