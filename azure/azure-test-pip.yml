@@ -11,7 +11,7 @@
 
     - name: Fetch the Load Balancer Public IP
       azure.azcollection.azure_rm_publicipaddress_info:
-        resource_group: "{{ resource_group }}"
+        resource_group: "{{ res_group }}"
         name: "{{ lb_pip_name }}"
       register: lb_pip_info
 
