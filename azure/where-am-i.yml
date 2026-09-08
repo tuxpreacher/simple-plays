@@ -14,7 +14,7 @@
   tasks:
     - name: Query Automation Controller API for current job details
       ansible.builtin.uri:
-        url: "{{ controller_host }}/api/v2/jobs/{{ current_job_id }}/"
+        url: "{{ controller_host }}/api/controller/v2/jobs/{{ current_job_id }}/"
         method: GET
         user: "{{ controller_user }}"
         password: "{{ controller_pass }}"
