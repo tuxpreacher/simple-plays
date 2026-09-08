@@ -32,4 +32,4 @@
 
     - name: Display the executed Instance Group
       ansible.builtin.debug:
-        msg: "This playbook is executing inside the Instance Group: {{ active_instance_group_name }}"
+        msg: "This playbook is executing inside the Instance Group {{ active_instance_group_name }} on the {{ awx_execution_node }} execution node"
