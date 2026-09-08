@@ -1,0 +1,22 @@
+---
+- name: Retrieve Current Job Instance Group Name from API
+  hosts: localhost
+  gather_facts: false
+  vars:
+    # Retrieve connection credentials from the job's execution environment variables [1, 2]
+    controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+    controller_user: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+    controller_pass: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+
+  tasks:
+    - name: Create custom Pulp system-wide role
+        ansible.platform.role_definition:
+          aap_hostname: "{{ controller_host }}"
+          aap_username: "{{ controller_user }}"
+          aap_password: "{{ controller_pass }}"
+          name: galaxy.ee_puller
+          content_type: ""
+          permissions:
+            - galaxy.namespace_pull_containerdistribution
+            - galaxy.namespace_view_containerdistribution
+          state: present
