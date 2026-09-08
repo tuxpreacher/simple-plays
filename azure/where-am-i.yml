@@ -29,7 +29,7 @@
 
     - name: Extract the Instance Group Name
       ansible.builtin.set_fact:
-        active_instance_group_name: "{{ job_details_response.json.instance_group.name }}"
+        active_instance_group_name: "{{ job_details_response.json.summary_fields.instance_group.name }}"
 
     - name: Display the executed Instance Group
       ansible.builtin.debug:
