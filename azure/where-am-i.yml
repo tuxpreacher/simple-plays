@@ -1,0 +1,35 @@
+---
+- name: Retrieve Current Job Instance Group Name from API
+  hosts: localhost
+  gather_facts: false
+  vars:
+    # Retrieve connection credentials from the job's execution environment variables [1, 2]
+    controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+    controller_user: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+    controller_pass: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+
+    # Retrieve the unique Job ID injected automatically by the platform [3, 4]
+    current_job_id: "{{ awx_job_id | default(aap_controller_job_id) }}"
+
+  tasks:
+    - name: Query Automation Controller API for current job details
+      ansible.builtin.uri:
+        url: "{{ controller_host }}/api/v2/jobs/{{ current_job_id }}/"
+        method: GET
+        user: "{{ controller_user }}"
+        password: "{{ controller_pass }}"
+        force_basic_auth: true
+        validate_certs: false
+        status_code: 200
+      register: job_details_response
+      until: job_details_response.status == 200
+      retries: 3
+      delay: 5
+
+    - name: Extract the Instance Group Name
+      ansible.builtin.set_fact:
+        active_instance_group_name: "{{ job_details_response.json.instance_group.name | default(job_details_response.json.summary_fields.instance_group.name) }}"
+
+    - name: Display the executed Instance Group
+      ansible.builtin.debug:
+        msg: "This playbook is executing inside the Instance Group: {{ active_instance_group_name }}"
