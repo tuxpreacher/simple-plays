@@ -8,8 +8,9 @@
     controller_user: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
     controller_pass: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
 
-    # Retrieve the unique Job ID injected automatically by the platform [3, 4]
-    current_job_id: "{{ awx_job_id | default(aap_controller_job_id) }}"
+    # Retrieve the unique Job ID injected automatically by the platform
+    # I think you can also use aap_controller_job_id starting with AAP 2.7
+    current_job_id: "{{ awx_job_id }}"
 
   tasks:
     - name: Query Automation Controller API for current job details
@@ -28,8 +29,9 @@
 
     - name: Extract the Instance Group Name
       ansible.builtin.set_fact:
-        active_instance_group_name: "{{ job_details_response.json.instance_group.name | default(job_details_response.json.summary_fields.instance_group.name) }}"
+        active_instance_group_name: "{{ job_details_response.json.instance_group.name }}"
 
     - name: Display the executed Instance Group
       ansible.builtin.debug:
+        # I think you can use aap_controller_execution_node instead of awx_execution_node starting with AAP 2.7
         msg: "This playbook is executing inside the Instance Group {{ active_instance_group_name }} on the {{ awx_execution_node }} execution node"
